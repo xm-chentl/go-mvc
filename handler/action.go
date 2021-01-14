@@ -3,10 +3,10 @@ package handler
 import (
 	"fmt"
 
+	"github.com/xm-chentl/go-mvc/metadata"
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
 	"github.com/xm-chentl/go-mvc/err"
-	"github.com/xm-chentl/go-mvc/metadata"
 )
 
 // Action 行为路由

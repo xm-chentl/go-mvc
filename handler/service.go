@@ -3,10 +3,10 @@ package handler
 import (
 	"fmt"
 
-	"gitee.com/love-yd/loveyd-lib-go/mvc"
-	"gitee.com/love-yd/loveyd-lib-go/mvc/enum"
-	"gitee.com/love-yd/loveyd-lib-go/mvc/err"
-	"gitee.com/love-yd/loveyd-lib-go/mvc/metadata"
+	"github.com/xm-chentl/go-mvc"
+	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/err"
+	"github.com/xm-chentl/go-mvc/metadata"
 )
 
 // Service 资源路由
