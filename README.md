@@ -1,7 +1,8 @@
 # mvc
+版本v0.2.0以上
 
 ## 概要
-方便搭建服务
+方便搭建微服务
 
 ## 项目结构
 
@@ -22,7 +23,7 @@ demo-account
     |- demo-account/mvc.Run(端口)
 ```
 
-## 搭建流程
+## 搭建流程 v0.1.0、v0.2.0 有效
 项目基本的创建流程，以下流程以demo-account为例进行说明。
 
 ### API创建
@@ -110,6 +111,7 @@ func init() {
 }
 ```
 ### 启动服务
+
 demo-account/main.go
 ```go
 package main
@@ -122,3 +124,6 @@ func main() {
     mvc.Run(8080)
 }
 ```
+
+
+## v0.3.0以上
