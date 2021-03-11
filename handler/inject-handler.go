@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/xm-chentl/go-mvc"
+	"github.com/xm-chentl/go-mvc/container"
 	"github.com/xm-chentl/go-mvc/enum"
-	"github.com/xm-chentl/go-mvc/metadata""
 )
 
 // InjectHandler 接口注入处理

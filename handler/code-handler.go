@@ -5,7 +5,7 @@ import (
 	"github.com/xm-chentl/go-mvc/enum"
 )
 
-// Code 接口编号
+// CodeHandler 接口链处理
 type CodeHandler struct {
 	baseHandler
 }

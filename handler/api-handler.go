@@ -8,13 +8,13 @@ import (
 	"github.com/xm-chentl/go-mvc/metadata"
 )
 
-// InjectHandler 接口注入处理
-type ApiHandler struct {
+// APIHandler 接口注入处理
+type APIHandler struct {
 	baseHandler
 }
 
 // Execute 执行
-func (h ApiHandler) Execute(ctx mvc.IContext) {
+func (h APIHandler) Execute(ctx mvc.IContext) {
 	// desc: 方法体
 	code := ctx.Get(enum.Code).(string)
 	if ok := metadata.Has(code); !ok {

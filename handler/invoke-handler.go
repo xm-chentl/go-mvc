@@ -5,7 +5,7 @@ import (
 	"github.com/xm-chentl/go-mvc/enum"
 )
 
-// InjectHandler 接口注入处理
+// InjectHandler 注入处理
 type InvokeHandler struct {
 	baseHandler
 }
