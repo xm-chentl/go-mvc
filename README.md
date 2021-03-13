@@ -111,7 +111,7 @@ import (
 func main() {
 	// 启动 服务
 	ginex.New().AddHandler(
-		handler.Default()，
+		handler.Default(),
 	).Run(conf.Get().Port)
 }
 
