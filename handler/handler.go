@@ -31,10 +31,10 @@ func New(handlers ...mvc.IHandler) mvc.IHandler {
 // Default 默认格式责任链
 func Default() mvc.IHandler {
 	return New(
-		new(handler.CodeHandler),
-		new(handler.APIHandler),
-		new(handler.InjectHandler),
-		new(handler.InvokeHandler),
-		new(handler.ResultHandler),
+		new(CodeHandler),
+		new(APIHandler),
+		new(InjectHandler),
+		new(InvokeHandler),
+		new(ResultHandler),
 	)
 }
