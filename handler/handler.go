@@ -16,6 +16,7 @@ func (m MainHandler) Execute(ctx mvc.IContext) {
 	}
 }
 
+// New 设置责任链节点，并生成一个主节点
 func New(handlers ...mvc.IHandler) mvc.IHandler {
 	mainHandler := &MainHandler{}
 	var nextHandler mvc.IHandler
@@ -25,4 +26,15 @@ func New(handlers ...mvc.IHandler) mvc.IHandler {
 		nextHandler = h
 	}
 	return mainHandler
+}
+
+// Default 默认格式责任链
+func Default() mvc.IHandler {
+	return New(
+		new(handler.CodeHandler),
+		new(handler.APIHandler),
+		new(handler.InjectHandler),
+		new(handler.InvokeHandler),
+		new(handler.ResultHandler),
+	)
 }
