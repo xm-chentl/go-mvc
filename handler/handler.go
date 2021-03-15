@@ -33,6 +33,7 @@ func Default() mvc.IHandler {
 	return New(
 		new(CodeHandler),
 		new(APIHandler),
+		new(VerifyHandler),
 		new(InjectHandler),
 		new(InvokeHandler),
 		new(ResultHandler),

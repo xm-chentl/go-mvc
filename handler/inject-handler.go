@@ -19,8 +19,6 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 	// todo: 方法体
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
-	// desc: 属性注入
-	routeCtx.Bind(apiInstance)
 	// desc: 组件注入
 	rt := reflect.TypeOf(apiInstance).Elem()
 	rv := reflect.ValueOf(apiInstance).Elem()

@@ -22,4 +22,6 @@ const (
 	APIMappingCode
 	// APIInjectFaild 接口注入失败
 	APIInjectFaild
+	// APIParemter api参数失败
+	APIParemterFaild
 )
