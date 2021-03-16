@@ -1,7 +1,6 @@
 package container
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -11,7 +10,6 @@ var (
 )
 
 func Get(key string) interface{} {
-	fmt.Println(keyOfInst)
 	if inst, ok := keyOfInst[key]; ok {
 		return inst
 	}
