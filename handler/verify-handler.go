@@ -26,10 +26,13 @@ func (h VerifyHandler) Execute(ctx mvc.IContext) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		if field.Type.Kind() != reflect.Interface {
+			field.Tag.
 			ver := verify.New(field.Tag.Lookup)
-			if ok := ver.Execute(rv.Field(i).Interface()); !ok {
-				h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
-				return
+			if ver != nil {
+				if ok := ver.Execute(rv.Field(i).Interface()); !ok {
+					h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
+					return
+				}
 			}
 		}
 	}

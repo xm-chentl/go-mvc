@@ -24,6 +24,15 @@ func Set(key string, inst interface{}) {
 	keyOfInst[key] = inst
 }
 
+func SetMany(insts map[string]interface{}) {
+	mt.Lock()
+	defer mt.Unlock()
+
+	for key, inst := range insts {
+		keyOfInst[key] = inst
+	}
+}
+
 func Has(key string) bool {
 	mt.Lock()
 	defer mt.Unlock()

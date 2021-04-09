@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -39,10 +40,13 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 			key := strings.ToLower(field.Name)
 			if container.Has(key) {
 				// desc: 注入组件
+				inst := container.Get(key)
+				if inst == nil {
+					h.Error(ctx, enum.APIInjectFaild, fmt.Sprintf("container inject faild err: %s is nil", field.Name))
+					return
+				}
 				rv.Field(i).Set(
-					reflect.ValueOf(
-						container.Get(key),
-					),
+					reflect.ValueOf(inst),
 				)
 				continue
 			}
