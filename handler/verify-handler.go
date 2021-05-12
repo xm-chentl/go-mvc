@@ -16,7 +16,7 @@ func (h VerifyHandler) Execute(ctx mvc.IContext) {
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
 	verifyInstance := ctx.Get(enum.Verify).(verify.IVerify)
-	routeCtx.Bind(apiInstance)
+	routeCtx.Bind(&apiInstance)
 	if ok := verifyInstance.Execute(apiInstance); !ok {
 		h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
 	}
