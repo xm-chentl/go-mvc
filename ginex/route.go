@@ -12,9 +12,11 @@ type ginRoute struct {
 }
 
 func (g ginRoute) Bind(req interface{}) {
-	if err := g.ctx.Bind(req); err != nil {
-		// todo: 暂时是抛异常
-		panic(err)
+	if g.ctx.Request.ContentLength > 0 {
+		if err := g.ctx.Bind(req); err != nil {
+			// todo: 暂时是抛异常
+			panic(err)
+		}
 	}
 }
 
