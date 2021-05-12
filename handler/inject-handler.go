@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/xm-chentl/go-mvc"
-	"github.com/xm-chentl/go-mvc/container"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/ioc"
 )
 
 // InjectHandler 接口注入处理
@@ -26,29 +26,30 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 	containerErr := false
 	for i := 0; i < rv.NumField(); i++ {
 		field := rt.Field(i)
+
 		// desc: 用于区分属性或者组件注入
 		if field.Type.Kind() == reflect.Interface {
-			// desc: 注入
 			if strings.Contains(field.Type.Name(), "IRoute") {
-				// desc: 注入上下文内容
 				rv.Field(i).Set(
 					reflect.ValueOf(routeCtx),
 				)
 				continue
 			}
 
-			key := strings.ToLower(field.Name)
-			if container.Has(key) {
-				// desc: 注入组件
-				inst := container.Get(key)
-				if inst == nil {
-					h.Error(ctx, enum.APIInjectFaild, fmt.Sprintf("container inject faild err: %s is nil", field.Name))
-					return
+			_, ok := field.Tag.Lookup(ioc.Inject)
+			if ok {
+				if ioc.Has(field.Type) {
+					// desc: 注入组件
+					inst := ioc.Get(field.Type)
+					if inst == nil {
+						h.Error(ctx, enum.APIInjectFaild, fmt.Sprintf("ioc inject faild err: %s is nil", field.Name))
+						return
+					}
+					rv.Field(i).Set(
+						reflect.ValueOf(inst),
+					)
+					continue
 				}
-				rv.Field(i).Set(
-					reflect.ValueOf(inst),
-				)
-				continue
 			}
 			containerErr = true
 		}

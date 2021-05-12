@@ -16,6 +16,7 @@ func (h InvokeHandler) Execute(ctx mvc.IContext) {
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
 	actionResult := apiInstance.Execute().(mvc.IActionResult)
 	ctx.Set(enum.Result, actionResult.Execute())
+	// todo: 释放ctx
 
 	if h.nextHandler != nil {
 		h.nextHandler.Execute(ctx)

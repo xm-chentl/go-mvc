@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"reflect"
-
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
 	"github.com/xm-chentl/go-mvc/verify"
@@ -17,24 +15,10 @@ func (h VerifyHandler) Execute(ctx mvc.IContext) {
 	// todo: 方法体
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
-	// desc: 属性注入
+	verifyInstance := ctx.Get(enum.Verify).(verify.IVerify)
 	routeCtx.Bind(apiInstance)
-	// todo: 优化反射
-	rt := reflect.TypeOf(apiInstance).Elem()
-	rv := reflect.ValueOf(apiInstance).Elem()
-	// desc: 获取参数
-	for i := 0; i < rt.NumField(); i++ {
-		field := rt.Field(i)
-		if field.Type.Kind() != reflect.Interface {
-			field.Tag.
-			ver := verify.New(field.Tag.Lookup)
-			if ver != nil {
-				if ok := ver.Execute(rv.Field(i).Interface()); !ok {
-					h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
-					return
-				}
-			}
-		}
+	if ok := verifyInstance.Execute(apiInstance); !ok {
+		h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
 	}
 
 	if h.nextHandler != nil {

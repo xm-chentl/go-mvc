@@ -11,6 +11,8 @@ const (
 	API
 	// Result 响应
 	Result
+	// Verify 验证器
+	Verify
 )
 
 type MvcErr int
