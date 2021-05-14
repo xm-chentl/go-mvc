@@ -1,10 +1,13 @@
 package ginex
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/xm-chentl/go-mvc"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ginRoute struct {
@@ -13,7 +16,11 @@ type ginRoute struct {
 
 func (g ginRoute) Bind(req interface{}) {
 	if g.ctx.Request.ContentLength > 0 {
-		if err := g.ctx.Bind(req); err != nil {
+		bodyByte, err := ioutil.ReadAll(g.ctx.Request.Body)
+		if err != nil {
+			panic(err)
+		}
+		if err := json.Unmarshal(bodyByte, req); err != nil {
 			// todo: 暂时是抛异常
 			panic(err)
 		}

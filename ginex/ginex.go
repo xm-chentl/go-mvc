@@ -3,12 +3,12 @@ package ginex
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
-
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/context"
 	"github.com/xm-chentl/go-mvc/enum"
 	"github.com/xm-chentl/go-mvc/verify/validator"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ginex struct {
@@ -27,7 +27,6 @@ func (g ginex) Run(port int) {
 		c := context.New()
 		c.Set(enum.CTX, newRoute(ctx))
 		c.Set(enum.Verify, verifyInst)
-		// todo: 不可开协程
 		g.handler.Execute(c)
 	})
 

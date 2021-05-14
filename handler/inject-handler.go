@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 
@@ -20,36 +19,16 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 	// todo: 方法体
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
-	// desc: 组件注入
-	rt := reflect.TypeOf(apiInstance).Elem()
-	rv := reflect.ValueOf(apiInstance).Elem()
-	for i := 0; i < rv.NumField(); i++ {
-		field := rt.Field(i)
-		// desc: 用于区分属性或者组件注入
-		if field.Type.Kind() == reflect.Interface {
-			if strings.Contains(field.Type.Name(), "IRoute") {
-				rv.Field(i).Set(
-					reflect.ValueOf(routeCtx),
-				)
-				continue
-			}
-
-			_, ok := field.Tag.Lookup(ioc.Inject)
-			if ok {
-				if ioc.Has(field.Type) {
-					// desc: 注入组件
-					inst := ioc.Get(field.Type)
-					if inst == nil {
-						h.Error(ctx, enum.APIInjectFaild, fmt.Sprintf("ioc inject faild err: %s is nil", field.Name))
-						return
-					}
-					rv.Field(i).Set(
-						reflect.ValueOf(inst),
-					)
-					continue
-				}
-			}
+	err := ioc.Inject(&apiInstance, func(field reflect.StructField) interface{} {
+		if strings.Contains(field.Type.Name(), "IRoute") {
+			return routeCtx
 		}
+
+		return nil
+	})
+	if err != nil {
+		h.Error(ctx, enum.APIInjectFaild, err.Error())
+		return
 	}
 
 	if h.nextHandler != nil {

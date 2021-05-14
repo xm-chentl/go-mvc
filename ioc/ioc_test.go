@@ -28,7 +28,7 @@ func Test_ioc_Set(t *testing.T) {
 			instType,
 			inst,
 		)
-		rt := getType(inst)
+		rt := getType(instType)
 		_, ok := keyOfInstance[rt]
 		assert.Equal(test, ok, true)
 	})
