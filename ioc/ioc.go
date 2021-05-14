@@ -1,44 +1,52 @@
 package ioc
 
 import (
+	"fmt"
 	"reflect"
-	"sync"
 )
 
 var (
-	mt            sync.Mutex
-	keyOfInstance = make(map[reflect.Type]interface{})
+	keyOfInstance = make(map[reflect.Type]reflect.Value)
 )
 
-func Get(typeKey reflect.Type) interface{} {
-	if inst, ok := keyOfInstance[typeKey]; ok {
-		return inst
+func Get(inst interface{}) interface{} {
+	instRt := getType(inst)
+	if instRv, ok := keyOfInstance[instRt]; ok {
+		return instRv.Interface()
 	}
 
 	return nil
 }
 
-func Set(inst interface{}) {
-	mt.Lock()
-	defer mt.Unlock()
-
-	keyOfInstance[reflect.TypeOf(inst)] = inst
-}
-
-func SetMany(instances ...interface{}) {
-	mt.Lock()
-	defer mt.Unlock()
-
-	for _, instance := range instances {
-		keyOfInstance[reflect.TypeOf(instance)] = instance
+func Set(instType interface{}, inst interface{}) {
+	rt := getType(instType)
+	instRt := reflect.TypeOf(inst)
+	if !instRt.Implements(rt) {
+		panic("Inst is not an InstType derived class")
 	}
+	keyOfInstance[rt] = reflect.ValueOf(inst)
 }
 
-func Has(typeKey reflect.Type) bool {
-	mt.Lock()
-	defer mt.Unlock()
-
-	_, ok := keyOfInstance[typeKey]
+func Has(inst interface{}) bool {
+	instRt := getType(inst)
+	_, ok := keyOfInstance[instRt]
 
 	return ok
+}
+
+func getType(inst interface{}) reflect.Type {
+	instRt, ok := inst.(reflect.Type)
+	if !ok {
+		instRt = reflect.TypeOf(inst)
+	}
+	if instRt.Kind() == reflect.Ptr {
+		instRt = instRt.Elem()
+	}
+	if instRt.Kind() != reflect.Interface {
+		panic(
+			fmt.Errorf("inst is not interface"),
+		)
+	}
+
+	return instRt
 }
