@@ -14,13 +14,13 @@ type ginRoute struct {
 	ctx *gin.Context
 }
 
-func (g ginRoute) Bind(req interface{}) {
+func (g ginRoute) Bind(arg interface{}) {
 	if g.ctx.Request.ContentLength > 0 {
 		bodyByte, err := ioutil.ReadAll(g.ctx.Request.Body)
 		if err != nil {
 			panic(err)
 		}
-		if err := json.Unmarshal(bodyByte, req); err != nil {
+		if err := json.Unmarshal(bodyByte, arg); err != nil {
 			// todo: 暂时是抛异常
 			panic(err)
 		}

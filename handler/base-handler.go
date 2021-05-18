@@ -10,11 +10,12 @@ import (
 
 type baseHandler struct {
 	nextHandler mvc.IHandler
+	nexts       []mvc.IHandler
 }
 
 func (h *baseHandler) Next(handler mvc.IHandler) mvc.IHandler {
-	h.nextHandler = handler
-	return h.nextHandler
+	h.nexts = append(h.nexts, handler)
+	return h
 }
 
 func (h *baseHandler) Error(ctx mvc.IContext, code enum.MvcErr, msg string) {
@@ -36,4 +37,10 @@ func (h *baseHandler) Errorf(ctx mvc.IContext, code enum.MvcErr, format string, 
 	}
 
 	h.Error(ctx, code, msg)
+}
+
+func (h *baseHandler) Execute(ctx mvc.IContext) {
+	if h.nextHandler != nil {
+		h.nextHandler.Execute(ctx)
+	}
 }

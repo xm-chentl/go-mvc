@@ -6,13 +6,13 @@ import (
 	"github.com/xm-chentl/go-mvc"
 )
 
-type baseResult struct {
+type Response struct {
 	Code int
 	Msg  string
 	Data interface{}
 }
 
-func (r baseResult) Execute() interface{} {
+func (r Response) Execute() interface{} {
 	return map[string]interface{}{
 		"code": r.Code,
 		"msg":  r.Msg,
@@ -22,7 +22,7 @@ func (r baseResult) Execute() interface{} {
 
 // Alert 提示级别的响应
 func Alert(code int, msg string) mvc.IActionResult {
-	return &baseResult{
+	return &Response{
 		Code: code,
 		Msg:  msg,
 	}
@@ -35,7 +35,7 @@ func Alertf(code int, format string, args ...interface{}) mvc.IActionResult {
 		msg = fmt.Sprintf(format, args...)
 	}
 
-	return &baseResult{
+	return &Response{
 		Code: code,
 		Msg:  msg,
 	}
@@ -43,7 +43,7 @@ func Alertf(code int, format string, args ...interface{}) mvc.IActionResult {
 
 // JSON 响应json数据
 func JSON(data interface{}) mvc.IActionResult {
-	return &baseResult{
+	return &Response{
 		Data: data,
 	}
 }
