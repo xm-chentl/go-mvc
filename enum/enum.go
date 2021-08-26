@@ -1,23 +1,31 @@
 package enum
 
-// Value 枚举值
-type Value int
+type ContextValue int
 
 const (
-	// CTX 上下文内容
-	CTX Value = iota
-	// ServerName 服务名
-	ServerName
-	// ServiceName 服务名
-	ServiceName
-	// ActionName 行为名
-	ActionName
-	// Parameters 参数
-	Parameters
-	// RespFunc 响应回调
-	RespFunc
-	// Err 错误
-	Err
-	// TraceID 追溯标识
-	TraceID
+	// CTX 路由组件上下文内容
+	CTX ContextValue = iota
+	// Code 接口编号
+	Code
+	// API 接口实现
+	API
+	// Result 响应
+	Result
+	// Verify 验证器
+	Verify
+)
+
+type MvcErr int
+
+const (
+	// ServerErr 服务内部错误
+	ServerErr MvcErr = iota + 599
+	// APINotExist 接口不存在
+	APINotExist
+	// APIMappingCode 找不到code映射的api
+	APIMappingCode
+	// APIInjectFaild 接口注入失败
+	APIInjectFaild
+	// APIParemter api参数失败
+	APIParemterFaild
 )

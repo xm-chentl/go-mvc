@@ -1,102 +1,43 @@
 package metadata
 
 import (
-	"reflect"
-	"strings"
 	"sync"
+
+	"github.com/xm-chentl/go-mvc"
 )
 
 var (
-	rwm          sync.RWMutex
-	keyOfService = make(map[string]Service)
+	mt       sync.Mutex
+	keyOfAPI = make(map[string]mvc.IApi)
 )
 
-// Register 注册元数据
-func Register(instances ...interface{}) {
-	rwm.Lock()
-	defer rwm.Unlock()
+// Register 注册
+func Register(apis ...mvc.IApi) {
+	mt.Lock()
+	defer mt.Unlock()
 
-	// 1. 反射获取相应类名，方法集合
-	for _, instance := range instances {
-		ser := toService(instance)
-		keyOfService[ser.Name] = ser
+	for _, api := range apis {
+		keyOfAPI[api.Code()] = api
 	}
 }
 
-// RegisterByCustom 自定义注册
-func RegisterByCustom(customOfMap map[string]interface{}) {
-	rwm.RLock()
-	defer rwm.RUnlock()
+// Get 获取Api
+func Get(key string) mvc.IApi {
+	mt.Lock()
+	defer mt.Unlock()
 
-	for key, instance := range customOfMap {
-		ser := toService(instance)
-		keyOfService[strings.ToLower(key)] = ser
-	}
-}
-
-// IsInitialize 是否初始化
-func IsInitialize() bool {
-	rwm.RLock()
-	defer rwm.RUnlock()
-
-	return len(keyOfService) > 0
-}
-
-// Get 获取服务
-func Get(key string) Service {
-	rwm.RLock()
-	defer rwm.RUnlock()
-
-	return keyOfService[key]
-}
-
-// Has 存在
-func Has(keys ...string) bool {
-	rwm.RLock()
-	defer rwm.RUnlock()
-
-	isOk := true
-	for _, key := range keys {
-		if _, ok := keyOfService[key]; !ok {
-			isOk = ok
-			break
-		}
+	if inst, ok := keyOfAPI[key]; ok {
+		return inst
 	}
 
-	return isOk
+	return nil
 }
 
-func toService(instance interface{}) Service {
-	rt := reflect.TypeOf(instance)
-	name := strings.ToLower(rt.Name())
+// Has 判断是否存在
+func Has(key string) bool {
+	mt.Lock()
+	defer mt.Unlock()
 
-	return Service{
-		Instance:     instance,
-		Name:         name,
-		NameOfAction: toActions(rt),
-		Type:         rt,
-	}
-}
-
-func toActions(serviceType reflect.Type) map[string]Action {
-	res := make(map[string]Action)
-	numOfMethod := serviceType.NumMethod()
-	for i := 0; i < numOfMethod; i++ {
-		method := serviceType.Method(i)
-		name := strings.ToLower(method.Name)
-		parameters := make([]Parameter, 0)
-		for j := 0; j < method.Type.NumIn(); j++ {
-			parameters = append(parameters, Parameter{
-				Name: method.Type.Name(),
-				Type: method.Type.In(j),
-			})
-		}
-		res[name] = Action{
-			Name:       name,
-			Method:     method,
-			Parameters: parameters,
-		}
-	}
-
-	return res
+	_, ok := keyOfAPI[key]
+	return ok
 }

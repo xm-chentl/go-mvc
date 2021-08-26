@@ -1,7 +1,7 @@
 package mvc
 
-// IMvc 接口
 type IMvc interface {
-	SetHandle(IHandler) IMvc
+	AddHandler(handler IHandler) IMvc
+	// Method todo: 扩展其它协议 PUT, DELETE
 	Run(port int)
 }

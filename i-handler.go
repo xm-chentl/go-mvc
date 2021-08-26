@@ -1,7 +1,7 @@
 package mvc
 
-// IHandler 处理链接口
+// IHandler 链式处理节点
 type IHandler interface {
 	Next(IHandler) IHandler
-	Exec(IContext)
+	Execute(IContext)
 }

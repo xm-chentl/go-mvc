@@ -1,55 +1,76 @@
 # mvc
-版本v0.2.0以上
+版本v0.3.4及以上，持续维护
 
 ## 概要
-方便搭建微服务
+微服务搭建
 
 ## 项目结构
 
 ```json
 demo-account
   |- api
-    |- wechat
-      |- wechat.go
-      |- ...以下为请球参数结构的规范（仅作为参考）
-      |- request-xxx.go
-    |- ...其它接口
-    register.go //注册api
+    |- user
+      |- login.go
+    |- register.go
+      |- func Register() ... API注册
   |- ...其它自行扩展 如: common等
-  |- mvc
-    |- mvc.go // loveyd-lib-go/mvc 流程的封装
   |- main.go // 启动入口
-    |- 注册api
-    |- demo-account/mvc.Run(端口)
+    |- func main() ... 启动服务
+    |- func init() ... 初始化服务中间件
 ```
 
-## 搭建流程 v0.1.0、v0.2.0 有效
-项目基本的创建流程，以下流程以demo-account为例进行说明。
+## 搭建流程
+项目基本项目结构，以下流程以demo-account为例进行说明。
 
 ### API创建
-demo-account/wechat/request-login.go
+demo-account/api/user/login.go
 ```go
-package wechat
-
-type requestLogin struct{
-    Code string
-}
-
-```
-demo-account/wechat/wechat.go
-```go
-package wechat
+package user
 
 import (
-	"loveyd-lib-go/mvc"
-	actionresult "loveyd-lib-go/mvc/action-result"
+	"fmt"
+
+	"github.com/xm-chentl/go-dbfty"
+	"github.com/xm-chentl/go-mvc"
+	"github.com/xm-chentl/go-mvc/actionresult"
+	"github.com/xm-chentl/go-mvc/scope"
 )
 
-type wechat struct{}
-
-func (w wechat) Login(req *requestLogin) mvc.IActionResult {
-    actionresult.JSON(nil)
+// Login 登录接口
+//【固定规范】属性注入 todo: 标签，后续扩展
+type Login struct {
+	// 中间件注入
+	RouteCtx mvc.IRoute
+	UserDb   dbfty.IFactory `key:"userdb"`
+	// 参数
+	Account  string
+	Password string
 }
+
+// Code 【固定规范】接口编号
+func (a Login) Code() string {
+	return "1001"
+}
+
+// Scope 【固定规范】作用域枚举
+func (a Login) Scope() scope.Value {
+	return scope.Server
+}
+
+// Execute 执行
+func (a *Login) Execute() mvc.IActionResult {
+	if a.UserDb != nil {
+		db := a.UserDb.Db()
+		fmt.Println("组件userDb => ", db)
+	}
+	if a.RouteCtx != nil {
+		fmt.Println("routeCtx => ", a.RouteCtx)
+	}
+	fmt.Println("account => ", a.Account, "password => ", a.Password)
+  // 获取参数值
+	return actionresult.JSON(fmt.Sprintf("account: %s, password: %s", a.Account, a.Password))
+}
+
 
 ```
 ### API注册
@@ -58,72 +79,49 @@ demo-account/api/register.go
 package api
 
 import (
-	"demo-account/api/wechat"
-	"loveyd-lib-go/mvc/metadata"
+	"github.com/xm-chentl/go-mvc/metadata"
+
+	"demo-account/api/user"
 )
 
+// Register 注册
 func Register() {
-    // 默认方式
-    metadata.Register(wechat.wechat{})
-    // 自定义方式
-    metadata.RegisterByCustom(map[string]interface{}{
-        "自定义服务名": wechat.wechat{}
-    })
+	metadata.Register(
+		&user.Login{},
+	)
 }
 
 ```
-### 配置启动处理流程
-demo-account/mvc/mvc.go
-```go
-package mvc
-
-import (
-	"demo-account/api"
-
-	"loveyd-lib-go/mvc"
-	"loveyd-lib-go/mvc/gin"
-	"loveyd-lib-go/mvc/handler"
-)
-
-// Run 启动
-// @param port 端口
-func Run(port int) {
-    // api请求方式 => /service/action
-    handle := new(handler.Handle)   // 默认处理入口
-	handle.Next(
-		new(handler.Service),   // service处理节点
-	).Next(
-		new(handler.Action),    // action处理节点
-	).Next(
-		new(handler.Verify),    // verify 参数处理节点
-	).Next(
-		new(handler.Invoke),    // invoke 执行处理节点
-    )
-    
-	mvc.Default().SetHandle(handle).Run(port)
-}
-
-func init() {
-    // 注册api
-    api.Register()
-    // 初始化mvc的初始化框架
-    mvc.SetDefault(gin.New())
-}
-```
-### 启动服务
+### 服务启动入口
 
 demo-account/main.go
 ```go
 package main
 
-import(
-    "demo-account/mvc"
+import (
+	"demo-account/api"
+	"demo-account/conf"
+
+	dbftymock "github.com/xm-chentl/go-dbfty/mock"
+	"github.com/xm-chentl/go-mvc/container"
+	"github.com/xm-chentl/go-mvc/ginex"
+	"github.com/xm-chentl/go-mvc/handler"
 )
 
 func main() {
-    mvc.Run(8080)
+	// 启动 服务
+	ginex.New().AddHandler(
+		handler.Default(),
+	).Run(conf.Get().Port)
 }
+
+func init() {
+	// api 注册
+	api.Register()
+	// 配置初始化
+	conf.Init()
+	// 内置是间件容器, 此处为注入
+	container.Set("userdb", dbftymock.New())
+}
+
 ```
-
-
-## v0.3.0以上

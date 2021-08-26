@@ -2,9 +2,10 @@ package mvc
 
 import "net/http"
 
-// IRoute 路由接口
+// IRoute 路由核心
 type IRoute interface {
 	Bind(interface{})
 	Request() *http.Request
-	Response(interface{})
+	Response() *http.Response
+	Result(interface{})
 }

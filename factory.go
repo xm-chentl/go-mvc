@@ -1,34 +1,31 @@
 package mvc
 
-import (
-	"sync"
-)
+import "sync"
 
-// DEFAULT 默认
 const DEFAULT = "default"
 
 var (
-	rwm       sync.RWMutex
-	nameOfMvc = make(map[string]IMvc)
+	mt       sync.Mutex
+	keyOfMvc = make(map[string]IMvc)
 )
 
-// Default 默认
 func Default() IMvc {
-	rwm.RLock()
-	defer rwm.RUnlock()
+	mt.Lock()
+	defer mt.Unlock()
 
-	ins, ok := nameOfMvc[DEFAULT]
-	if !ok {
-		panic("mvc is not instance")
+	if inst, ok := keyOfMvc[DEFAULT]; ok {
+		return inst
 	}
-
-	return ins
+	panic("default instance is not exist")
 }
 
-// SetDefault 设置默认
-func SetDefault(ins IMvc) {
-	rwm.Lock()
-	defer rwm.Unlock()
+func SetDefault(inst IMvc) {
+	if inst == nil {
+		return
+	}
 
-	nameOfMvc[DEFAULT] = ins
+	mt.Lock()
+	defer mt.Unlock()
+
+	keyOfMvc[DEFAULT] = inst
 }
