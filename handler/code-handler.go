@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 )
 
 // CodeHandler 接口链处理
@@ -17,7 +18,7 @@ func (h CodeHandler) Execute(ctx mvc.IContext) {
 	code := routeCtx.Request().Header.Get("code")
 	if code == "" {
 		// todo: 异常
-		h.Error(ctx, enum.APINotExist, "request header code is empty")
+		h.Error(ctx, errorex.APINotExist, "request header code is empty")
 		return
 	}
 	ctx.Set(enum.Code, code)

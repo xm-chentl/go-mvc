@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/xm-chentl/go-mvc"
-	"github.com/xm-chentl/go-mvc/actionresult"
 	"github.com/xm-chentl/go-mvc/context"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 	"github.com/xm-chentl/go-mvc/verify/validator"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +30,10 @@ func (g ginex) Run(port int) {
 			if recoverErr := recover(); recoverErr != nil {
 				ctx.JSON(
 					http.StatusOK,
-					actionresult.Alert(int(enum.ServerErr), (recoverErr.(error)).Error()),
+					map[string]interface{}{
+						"err":  errorex.ServerErr,
+						"data": map[string]interface{}{},
+					},
 				)
 			}
 		}()

@@ -14,8 +14,9 @@ type InvokeHandler struct {
 func (h InvokeHandler) Execute(ctx mvc.IContext) {
 	// desc: 方法体
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
-	actionResult := apiInstance.Execute().(mvc.IActionResult)
-	ctx.Set(enum.Result, actionResult.Execute())
+	data, err := apiInstance.Call()
+	ctx.Set(enum.Result, data)
+	ctx.Set(enum.Error, err)
 	// todo: 释放ctx
 
 	if h.nextHandler != nil {

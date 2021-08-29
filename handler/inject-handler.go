@@ -6,6 +6,7 @@ import (
 
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 	"github.com/xm-chentl/go-mvc/ioc"
 )
 
@@ -27,7 +28,7 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 		return nil
 	})
 	if err != nil {
-		h.Error(ctx, enum.APIInjectFaild, err.Error())
+		h.Error(ctx, errorex.APIInjectFaild, err.Error())
 		return
 	}
 

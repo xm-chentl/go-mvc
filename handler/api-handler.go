@@ -5,6 +5,7 @@ import (
 
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 	"github.com/xm-chentl/go-mvc/metadata"
 )
 
@@ -18,8 +19,7 @@ func (h APIHandler) Execute(ctx mvc.IContext) {
 	// desc: 方法体
 	code := ctx.Get(enum.Code).(string)
 	if ok := metadata.Has(code); !ok {
-		// todo: 异常
-		h.Errorf(ctx, enum.APIMappingCode, "code (%s) mapping api not exist", code)
+		h.Errorf(ctx, errorex.APIMappingCode, "code (%s) mapping api not exist", code)
 		return
 	}
 

@@ -1,6 +1,8 @@
 package mvc
 
-import "github.com/xm-chentl/go-mvc/enum"
+import (
+	"github.com/xm-chentl/go-mvc/enum"
+)
 
 // IContext mvc上下文内容
 type IContext interface {

@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 	"github.com/xm-chentl/go-mvc/verify"
 )
 
@@ -18,7 +19,7 @@ func (h VerifyHandler) Execute(ctx mvc.IContext) {
 	verifyInstance := ctx.Get(enum.Verify).(verify.IVerify)
 	routeCtx.Bind(&apiInstance)
 	if ok := verifyInstance.Execute(apiInstance); !ok {
-		h.Error(ctx, enum.APIParemterFaild, "api parameter verify faild")
+		h.Error(ctx, errorex.APIParemterFaild, "api parameter verify faild")
 	}
 
 	if h.nextHandler != nil {

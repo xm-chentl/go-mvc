@@ -6,6 +6,7 @@ import (
 	"github.com/xm-chentl/go-mvc"
 	"github.com/xm-chentl/go-mvc/actionresult"
 	"github.com/xm-chentl/go-mvc/enum"
+	"github.com/xm-chentl/go-mvc/errorex"
 )
 
 type baseHandler struct {
@@ -18,7 +19,7 @@ func (h *baseHandler) Next(handler mvc.IHandler) mvc.IHandler {
 	return h
 }
 
-func (h *baseHandler) Error(ctx mvc.IContext, code enum.MvcErr, msg string) {
+func (h *baseHandler) Error(ctx mvc.IContext, code errorex.MvcErr, msg string) {
 	// desc: 断开链
 	h.nextHandler = nil
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
@@ -30,7 +31,7 @@ func (h *baseHandler) Error(ctx mvc.IContext, code enum.MvcErr, msg string) {
 	)
 }
 
-func (h *baseHandler) Errorf(ctx mvc.IContext, code enum.MvcErr, format string, args ...interface{}) {
+func (h *baseHandler) Errorf(ctx mvc.IContext, code errorex.MvcErr, format string, args ...interface{}) {
 	msg := format
 	if len(args) > 0 {
 		msg = fmt.Sprintf(format, args...)
