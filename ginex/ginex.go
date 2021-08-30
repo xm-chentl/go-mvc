@@ -25,7 +25,7 @@ func (g *ginex) AddHandler(handler mvc.IHandler) mvc.IMvc {
 func (g ginex) Run(port int) {
 	ginInst := gin.Default()
 	verifyInst := validator.New()
-	ginInst.POST("/", func(ctx *gin.Context) {
+	ginInst.POST("/:server/:action", func(ctx *gin.Context) {
 		defer func() {
 			if recoverErr := recover(); recoverErr != nil {
 				ctx.JSON(
@@ -39,6 +39,7 @@ func (g ginex) Run(port int) {
 		}()
 
 		c := context.New()
+		c.Set(enum.Code, fmt.Sprintf("/%s/%s", ctx.Param("server"), ctx.Param("action")))
 		c.Set(enum.CTX, newRoute(ctx))
 		c.Set(enum.Verify, verifyInst)
 		g.handler.Execute(c)

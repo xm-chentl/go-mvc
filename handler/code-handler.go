@@ -15,7 +15,12 @@ type CodeHandler struct {
 func (h CodeHandler) Execute(ctx mvc.IContext) {
 	// todo: 方法体
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
-	code := routeCtx.Request().Header.Get("code")
+	var code string
+	if ctx.Has(enum.Code) {
+		code = ctx.Get(enum.Code).(string)
+	} else {
+		code = routeCtx.Request().Header.Get("code")
+	}
 	if code == "" {
 		// todo: 异常
 		h.Error(ctx, errorex.APINotExist, "request header code is empty")
