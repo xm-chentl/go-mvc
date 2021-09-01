@@ -52,9 +52,12 @@ func Inject(structInst interface{}, funcs ...func(reflect.StructField) interface
 			}
 
 			if len(funcs) > 0 {
-				rv.Field(i).Set(
-					reflect.ValueOf(funcs[0](field)),
-				)
+				inst := funcs[0](field)
+				if inst != nil {
+					rv.Field(i).Set(
+						reflect.ValueOf(inst),
+					)
+				}
 			}
 		}
 	}

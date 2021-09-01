@@ -11,12 +11,11 @@ import (
 
 type baseHandler struct {
 	nextHandler mvc.IHandler
-	nexts       []mvc.IHandler
 }
 
 func (h *baseHandler) Next(handler mvc.IHandler) mvc.IHandler {
-	h.nexts = append(h.nexts, handler)
-	return h
+	h.nextHandler = handler
+	return h.nextHandler
 }
 
 func (h *baseHandler) Error(ctx mvc.IContext, code errorex.MvcErr, msg string) {
