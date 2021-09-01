@@ -20,7 +20,7 @@ func (h InjectHandler) Execute(ctx mvc.IContext) {
 	// todo: 方法体
 	routeCtx := ctx.Get(enum.CTX).(mvc.IRoute)
 	apiInstance := ctx.Get(enum.API).(mvc.IApi)
-	err := ioc.Inject(&apiInstance, func(field reflect.StructField) interface{} {
+	err := ioc.Inject(apiInstance, func(field reflect.StructField) interface{} {
 		if strings.Contains(field.Type.Name(), "IRoute") {
 			return routeCtx
 		}
