@@ -39,7 +39,7 @@ func (g *ginRoute) Result(data interface{}) {
 	g.ctx.JSON(http.StatusOK, data)
 }
 
-func newRoute(ctx *gin.Context) mvc.IRoute {
+func NewRoute(ctx *gin.Context) mvc.IRoute {
 	return &ginRoute{
 		ctx: ctx,
 	}
