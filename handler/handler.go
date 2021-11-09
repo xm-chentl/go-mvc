@@ -39,3 +39,11 @@ func Default() mvc.IHandler {
 		new(ResultHandler),
 	)
 }
+
+/*
+	1. 解析路由
+	2. 分析body
+	3. 验证
+	4. 注入
+	5. 调用
+*/

@@ -1,8 +1,6 @@
 package ginex
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/xm-chentl/go-mvc"
@@ -16,12 +14,7 @@ type ginRoute struct {
 
 func (g ginRoute) Bind(arg interface{}) {
 	if g.ctx.Request.ContentLength > 0 {
-		bodyByte, err := ioutil.ReadAll(g.ctx.Request.Body)
-		if err != nil {
-			panic(err)
-		}
-		if err := json.Unmarshal(bodyByte, arg); err != nil {
-			// todo: 暂时是抛异常
+		if err := g.ctx.ShouldBindJSON(arg); err != nil {
 			panic(err)
 		}
 	}

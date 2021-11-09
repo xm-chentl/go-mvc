@@ -18,7 +18,6 @@ func (h InvokeHandler) Execute(ctx mvc.IContext) {
 	ctx.Set(enum.Result, data)
 	ctx.Set(enum.Error, err)
 	// todo: 释放ctx
-
 	if h.nextHandler != nil {
 		h.nextHandler.Execute(ctx)
 	}
